@@ -11,19 +11,24 @@ namespace TwitchLib
     {
         private OAuth oauth;
         private Fuel fuel;
-        public TwitchApp()
-        {
-            this.code = code;
-        }
+        private Models.App.Session.Session session;
+        public TwitchApp() { }
 
         /// <summary>
         /// Calls two authorization calls to create OAuth and Fuel models which are used to access the rest of the curse service.
         /// </summary>
         /// <param name="code">This code comes from here: https://api.twitch.tv/kraken/oauth2/authorize?action=callback&client_id=jf3xu125ejjjt5cl4osdjci6oz6p93r&redirect_uri=https%3A%2F%2Fweb.curseapp.net%2Flaguna%2Fpassport-callback.html&response_type=code Go there, login, and after being redirected, look at the new URL in the browser and copy the code parameter.</param>
-        public async void Login(string code)
+        public async void Connect(string code)
         {
+            // login stuffs
             oauth = await Internal.Requests.TwitchApp.Auth(code);
-            fuel = await Internal.Requests.TwitchApp.Fuel(oauth.Session.Token);
+            fuel = await Internal.Requests.TwitchApp.Post<Models.App.Login.Fuel>("https://logins-v1.curseapp.net/login/fuel", oauth.Session.Token);
+
+            // download contacts/servers
+
+
+            // create session
+            session = await Internal.Requests.TwitchApp.PostModel<Models.App.Session.Session>("https://sessions-v1.curseapp.net/sessions", oauth.Session.Token, new Models.App.RequestModels.CreateSession());
         }
     }
 }

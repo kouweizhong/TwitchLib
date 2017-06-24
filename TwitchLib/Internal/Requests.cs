@@ -40,9 +40,36 @@ namespace TwitchLib.Internal
                 }
             }
 
-            public static async Task<T> Post<T>(string url, string payload)
+            public static async Task<T> Post<T>(string url, string token, string payload = null)
             {
-                return JsonConvert.DeserializeObject<T>(await Post(url, payload), TwitchLibJsonDeserializer);
+                string resp = await Post(url, token, payload);
+                return JsonConvert.DeserializeObject<T>(resp, TwitchLibJsonDeserializer);
+            }
+
+            public static async Task<T> PostModel<T>(string url, string token, Models.App.RequestModels.BaseModel model)
+            {
+                string resp = await Post(url, token, JsonConvert.SerializeObject(model));
+                return JsonConvert.DeserializeObject<T>(resp, TwitchLibJsonDeserializer);
+            }
+
+            public static async Task<string> Post(string url, string token, string payload = null)
+            {
+                var req = WebRequest.CreateHttp(url);
+                req.Method = "POST";
+                req.ContentType = "application/json";
+                req.Headers["AuthenticationToken"] = token;
+
+                if (payload != null)
+                {
+                    using (var writer = new StreamWriter(req.GetRequestStream()))
+                        await writer.WriteAsync(payload);
+                }
+
+                var response = await req.GetResponseAsync();
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    return await reader.ReadToEndAsync();
+                }
             }
 
             public static async Task<Models.App.Login.OAuth> Auth(string code)
@@ -57,29 +84,13 @@ namespace TwitchLib.Internal
 
                 using (var writer = new StreamWriter(req.GetRequestStream()))
                 {
-                    writer.Write(payload);
+                    await writer.WriteAsync(payload);
                 }
 
                 var response = req.GetResponse();
                 using (var reader = new StreamReader(response.GetResponseStream()))
                 {
-                    return JsonConvert.DeserializeObject<Models.App.Login.OAuth>(reader.ReadToEnd());
-                }
-            }
-
-            public static async Task<Models.App.Login.Fuel> Fuel(string token)
-            {
-                string url = @"https://logins-v1.curseapp.net/login/fuel";
-
-                var req = WebRequest.CreateHttp(url);
-                req.Method = "POST";
-                req.ContentType = "application/json";
-                req.Headers["AuthenticationToken"] = token;
-
-                var response = req.GetResponse();
-                using (var reader = new StreamReader(response.GetResponseStream()))
-                {
-                    return JsonConvert.DeserializeObject<Models.App.Login.Fuel>(reader.ReadToEnd());
+                    return JsonConvert.DeserializeObject<Models.App.Login.OAuth>(await reader.ReadToEndAsync(), TwitchLibJsonDeserializer);
                 }
             }
         }

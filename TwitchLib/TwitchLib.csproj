@@ -381,6 +381,12 @@
     <Compile Include="Models\App\Login\Fuel.cs" />
     <Compile Include="Models\App\Login\OAuth.cs" />
     <Compile Include="Models\App\Login\Session.cs" />
+    <Compile Include="Models\App\RequestModels\BaseModel.cs" />
+    <Compile Include="Models\App\RequestModels\CreateSession.cs" />
+    <Compile Include="Models\App\Session\PrivacySettings.cs" />
+    <Compile Include="Models\App\Session\Session.cs" />
+    <Compile Include="Models\App\Session\User.cs" />
+    <Compile Include="Models\App\Session\WatchingChannel.cs" />
     <Compile Include="Models\Client\ChannelState.cs" />
     <Compile Include="Models\Client\ChatCommand.cs" />
     <Compile Include="Models\Client\EmoteSet.cs" />
