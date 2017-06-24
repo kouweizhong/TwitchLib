@@ -8,9 +8,82 @@ namespace TwitchLib.Internal
     using Newtonsoft.Json.Serialization;
     using System.Threading.Tasks;
     using System;
+    using System.Text;
     #endregion
-    internal class Requests
+    internal static class Requests
     {
+        public static class TwitchApp {
+            public static string Get(string url)
+            {
+                return new System.Net.WebClient().DownloadString(url);
+            }
+            public static T Get<T>(string url)
+            {
+                return JsonConvert.DeserializeObject<T>(new System.Net.WebClient().DownloadString(url));
+            }
+
+            public static async Task<string> Post(string url, string payload)
+            {
+                var req = WebRequest.CreateHttp(url);
+                req.Method = "POST";
+                req.ContentType = "application/json";
+
+                using (var writer = new StreamWriter(req.GetRequestStream()))
+                {
+                    writer.Write(payload);
+                }
+
+                var response = req.GetResponse();
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+
+            public static async Task<T> Post<T>(string url, string payload)
+            {
+                return JsonConvert.DeserializeObject<T>(await Post(url, payload), TwitchLibJsonDeserializer);
+            }
+
+            public static async Task<Models.App.Login.OAuth> Auth(string code)
+            {
+                string url = @"https://logins-v1.curseapp.net/login/twitch-oauth";
+                string payload = "{\"ClientID\":\"jf3xu125ejjjt5cl4osdjci6oz6p93r\",\"Code\":\"" + code + "\",\"State\":\"48ea05795ea572833b3b51dbdd59efe3\",\"RedirectUri\":\"" + @"https://web.curseapp.net/laguna/passport-callback.html" + "\"}";
+
+                var req = WebRequest.CreateHttp(url);
+                req.Method = "POST";
+                req.ContentType = "application/json";
+                req.ContentLength = 200;
+
+                using (var writer = new StreamWriter(req.GetRequestStream()))
+                {
+                    writer.Write(payload);
+                }
+
+                var response = req.GetResponse();
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    return JsonConvert.DeserializeObject<Models.App.Login.OAuth>(reader.ReadToEnd());
+                }
+            }
+
+            public static async Task<Models.App.Login.Fuel> Fuel(string token)
+            {
+                string url = @"https://logins-v1.curseapp.net/login/fuel";
+
+                var req = WebRequest.CreateHttp(url);
+                req.Method = "POST";
+                req.ContentType = "application/json";
+                req.Headers["AuthenticationToken"] = token;
+
+                var response = req.GetResponse();
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    return JsonConvert.DeserializeObject<Models.App.Login.Fuel>(reader.ReadToEnd());
+                }
+            }
+        }
+
         public enum API
         {
             v3 = 3,

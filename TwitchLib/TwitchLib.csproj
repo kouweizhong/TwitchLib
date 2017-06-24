@@ -378,6 +378,9 @@
     <Compile Include="Models\API\v5\Videos\VideoThumbnails.cs" />
     <Compile Include="Models\API\v5\Videos\VideoUpload.cs" />
     <Compile Include="Models\API\v5\ViewerHeartbeatService\VHSConnectionCheck.cs" />
+    <Compile Include="Models\App\Login\Fuel.cs" />
+    <Compile Include="Models\App\Login\OAuth.cs" />
+    <Compile Include="Models\App\Login\Session.cs" />
     <Compile Include="Models\Client\ChannelState.cs" />
     <Compile Include="Models\Client\ChatCommand.cs" />
     <Compile Include="Models\Client\EmoteSet.cs" />
@@ -405,6 +408,7 @@
     <Compile Include="Exceptions\Client\ErrorLoggingInException.cs" />
     <Compile Include="Exceptions\API\BadResourceException.cs" />
     <Compile Include="TwitchAPI.cs" />
+    <Compile Include="TwitchApp.cs" />
     <Compile Include="TwitchClient.cs" />
     <Compile Include="Models\Client\SentMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
