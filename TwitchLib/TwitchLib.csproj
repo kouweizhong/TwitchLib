@@ -378,6 +378,14 @@
     <Compile Include="Models\API\v5\Videos\VideoThumbnails.cs" />
     <Compile Include="Models\API\v5\Videos\VideoUpload.cs" />
     <Compile Include="Models\API\v5\ViewerHeartbeatService\VHSConnectionCheck.cs" />
+    <Compile Include="Models\App\Contacts\BlockedUser.cs" />
+    <Compile Include="Models\App\Contacts\Channel.cs" />
+    <Compile Include="Models\App\Contacts\ChannelMembership.cs" />
+    <Compile Include="Models\App\Contacts\Contacts.cs" />
+    <Compile Include="Models\App\Contacts\Friend.cs" />
+    <Compile Include="Models\App\Contacts\Group.cs" />
+    <Compile Include="Models\App\Contacts\GroupMembership.cs" />
+    <Compile Include="Models\App\Contacts\PrivateConversation.cs" />
     <Compile Include="Models\App\Login\Fuel.cs" />
     <Compile Include="Models\App\Login\OAuth.cs" />
     <Compile Include="Models\App\Login\Session.cs" />

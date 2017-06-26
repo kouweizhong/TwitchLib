@@ -13,13 +13,22 @@ namespace TwitchLib.Internal
     internal static class Requests
     {
         public static class TwitchApp {
-            public static string Get(string url)
+            public async static Task<string> Get(string url, string token)
             {
-                return new System.Net.WebClient().DownloadString(url);
+                var req = WebRequest.CreateHttp(url);
+                req.Method = "GET";
+                req.ContentType = "application/json";
+                req.Headers["AuthenticationToken"] = token;
+
+                var response = await req.GetResponseAsync();
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    return await reader.ReadToEndAsync();
+                }
             }
-            public static T Get<T>(string url)
+            public async static Task<T> Get<T>(string url, string token)
             {
-                return JsonConvert.DeserializeObject<T>(new System.Net.WebClient().DownloadString(url));
+                return JsonConvert.DeserializeObject<T>(await Get(url, token));
             }
 
             public static async Task<string> Post(string url, string payload)

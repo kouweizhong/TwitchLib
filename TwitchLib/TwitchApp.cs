@@ -12,6 +12,8 @@ namespace TwitchLib
         private OAuth oauth;
         private Fuel fuel;
         private Models.App.Session.Session session;
+        private Models.App.Contacts.Contacts contacts;
+        
         public TwitchApp() { }
 
         /// <summary>
@@ -25,7 +27,7 @@ namespace TwitchLib
             fuel = await Internal.Requests.TwitchApp.Post<Models.App.Login.Fuel>("https://logins-v1.curseapp.net/login/fuel", oauth.Session.Token);
 
             // download contacts/servers
-
+            contacts = await Internal.Requests.TwitchApp.Get<Models.App.Contacts.Contacts>("https://contacts-v1.curseapp.net/contacts", oauth.Session.Token);
 
             // create session
             session = await Internal.Requests.TwitchApp.PostModel<Models.App.Session.Session>("https://sessions-v1.curseapp.net/sessions", oauth.Session.Token, new Models.App.RequestModels.CreateSession());
