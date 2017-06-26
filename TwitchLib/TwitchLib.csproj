@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Common\Logging.cs" />
     <Compile Include="Enums\ChanneldentifierTypeEnum.cs" />
+    <Compile Include="Enums\CurseMessageType.cs" />
     <Compile Include="Enums\NoisyEnum.cs" />
     <Compile Include="Enums\AuthScopesEnum.cs" />
     <Compile Include="Enums\StreamIdentifierType.cs" />
@@ -378,6 +379,19 @@
     <Compile Include="Models\API\v5\Videos\VideoThumbnails.cs" />
     <Compile Include="Models\API\v5\Videos\VideoUpload.cs" />
     <Compile Include="Models\API\v5\ViewerHeartbeatService\VHSConnectionCheck.cs" />
+    <Compile Include="Models\App\Client\CurseMessage.cs" />
+    <Compile Include="Models\App\Client\CurseResponseBody.cs" />
+    <Compile Include="Models\App\Client\Responses\ChannelMarkedRead.cs" />
+    <Compile Include="Models\App\Client\Responses\ChannelStatusChanged.cs" />
+    <Compile Include="Models\App\Client\Responses\ChatMessage.cs" />
+    <Compile Include="Models\App\Client\Responses\ClientPreferences.cs" />
+    <Compile Include="Models\App\Client\Responses\FriendRemoved.cs" />
+    <Compile Include="Models\App\Client\Responses\FriendshipStatus.cs" />
+    <Compile Include="Models\App\Client\Responses\Login.cs" />
+    <Compile Include="Models\App\Client\Responses\MessageChanged.cs" />
+    <Compile Include="Models\App\Client\Responses\MessageStatus.cs" />
+    <Compile Include="Models\App\Client\Responses\Ping.cs" />
+    <Compile Include="Models\App\Client\Responses\UserActivityChange.cs" />
     <Compile Include="Models\App\Contacts\BlockedUser.cs" />
     <Compile Include="Models\App\Contacts\Channel.cs" />
     <Compile Include="Models\App\Contacts\ChannelMembership.cs" />
