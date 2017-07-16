@@ -13,7 +13,7 @@ namespace TwitchLib
         public static class Settings
         {
             #region ClientId
-            public static string ClientId { get { return Internal.TwitchAPI.Shared.ClientId; } set { Shared.ClientId = value; } }
+            public static string ClientId { get { return Shared.ClientId; } set { Shared.ClientId = value; } }
             #endregion
             #region AccessToken
             public static string AccessToken { get { return Internal.TwitchAPI.Shared.AccessToken; } set { Shared.AccessToken = value; } }

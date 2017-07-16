@@ -12,22 +12,29 @@ namespace TwitchLib.Internal.TwitchAPI
             public async static Task<Models.API.v3.Blocks.GetBlocksResponse> GetBlocks(string channel, int limit = 25, int offset = 0, string accessToken = null)
             {
                 Shared.DynamicScopeValidation(Enums.AuthScopes.User_Blocks_Read, accessToken);
-                string pm = $"?limit={limit}&offset={offset}";
-                return await Requests.GetGeneric<Models.API.v3.Blocks.GetBlocksResponse>($"https://api.twitch.tv/kraken/users/{channel}/blocks{pm}", accessToken, Requests.API.v3);
+
+                Http req = new Http($"https://api.twitch.tv/kraken/users/{channel}/") { AccessToken = accessToken };
+                req.AddUrlSegmentIfNotNull("limit", limit);
+                req.AddUrlSegmentIfNotNull("offset", offset);
+                return await req.ExecuteResponseAsModelAsync<Models.API.v3.Blocks.GetBlocksResponse>();
             }
             #endregion
             #region CreateBlock
             public async static Task<Models.API.v3.Blocks.Block> CreateBlock(string channel, string target, string accessToken = null)
             {
                 Shared.DynamicScopeValidation(Enums.AuthScopes.User_Blocks_Edit, accessToken);
-                return await Requests.PutGeneric<Models.API.v3.Blocks.Block>($"https://api.twitch.tv/kraken/users/{channel}/blocks/{target}", null, accessToken, Requests.API.v3);
+
+                Http req = new Http($"https://api.twitch.tv/kraken/users/{channel}/blocks/{target}") { AccessToken = accessToken, Method = Enums.Method.PUT };
+                return await req.ExecuteResponseAsModelAsync<Models.API.v3.Blocks.Block>();
             }
             #endregion
             #region RemoveBlock
             public async static Task RemoveBlock(string channel, string target, string accessToken = null)
             {
                 Shared.DynamicScopeValidation(Enums.AuthScopes.User_Blocks_Edit, accessToken);
-                await Requests.Delete($"https://api.twitch.tv/kraken/users/{channel}/blocks/{target}", accessToken, Requests.API.v3);
+
+                Http req = new Http($"https://api.twitch.tv/kraken/users/{channel}/blocks/{target}") { AccessToken = accessToken, Method = Enums.Method.DELETE };
+                await req.ExecuteAsync();
             }
             #endregion
         }
@@ -38,50 +45,60 @@ namespace TwitchLib.Internal.TwitchAPI
             public async static Task<Models.API.v3.ChannelFeeds.ChannelFeedResponse> GetChannelFeedPosts(string channel, int limit = 25, string cursor = null, string accessToken = null)
             {
                 Shared.DynamicScopeValidation(Enums.AuthScopes.Channel_Feed_Read, accessToken);
-                string pm = $"?limit={limit}";
-                if (cursor != null)
-                    pm = $"{pm}&cursor={cursor}";
-                return await Requests.GetGeneric<Models.API.v3.ChannelFeeds.ChannelFeedResponse>($"https://api.twitch.tv/kraken/feed/{channel}/posts{pm}", accessToken, Requests.API.v3);
+
+                Http req = new Http($"https://api.twitch.tv/kraken/feed/{channel}/posts") { AccessToken = accessToken };
+                req.AddUrlSegmentIfNotNull("limit", limit);
+                req.AddUrlSegmentIfNotNull("cursor", cursor);
+                return await req.ExecuteResponseAsModelAsync<Models.API.v3.ChannelFeeds.ChannelFeedResponse>();
             }
             #endregion
             #region CreatePost
             public async static Task<Models.API.v3.ChannelFeeds.PostResponse> CreatePost(string channel, string content, bool share = false, string accessToken = null)
             {
                 Shared.DynamicScopeValidation(Enums.AuthScopes.Channel_Feed_Edit, accessToken);
-                var model = new Models.API.v3.ChannelFeeds.CreatePostRequest()
-                {
-                    Content = content,
-                    Share = share
-                };
-                return await Requests.PostGenericModel<Models.API.v3.ChannelFeeds.PostResponse>($"https://api.twitch.tv/kraken/feed/{channel}/posts", model, accessToken, Requests.API.v3);
+
+                Http req = new Http($"https://api.twitch.tv/kraken/feed/{channel}/posts") { AccessToken = accessToken, Method = Enums.Method.POST };
+                req.AddParameterRequired("content", content);
+                req.AddParameterRequired("share", share);
+                return await req.ExecuteResponseAsModelAsync<Models.API.v3.ChannelFeeds.PostResponse>();
             }
             #endregion
             #region GetPost
             public async static Task<Models.API.v3.ChannelFeeds.Post> GetPost(string channel, string postId, string accessToken = null)
             {
                 Shared.DynamicScopeValidation(Enums.AuthScopes.Channel_Feed_Edit, accessToken);
-                return await Requests.GetGeneric<Models.API.v3.ChannelFeeds.Post>($"https://api.twitch.tv/kraken/feed/{channel}/posts/{postId}", accessToken, Requests.API.v3);
+
+                Http req = new Http($"https://api.twitch.tv/kraken/feed/{channel}/posts/{postId}") { AccessToken = accessToken };
+                return await req.ExecuteResponseAsModelAsync<Models.API.v3.ChannelFeeds.Post>();
             }
             #endregion
             #region DeletePost
             public async static Task DeletePost(string channel, string postId, string accessToken = null)
             {
                 Shared.DynamicScopeValidation(Enums.AuthScopes.Channel_Feed_Edit, accessToken);
-                await Requests.Delete($"https://api.twitch.tv/kraken/feed/{channel}/posts/{postId}", accessToken, Requests.API.v3);
+
+                Http req = new Http($"https://api.twitch.tv/kraken/feed/{channel}/posts/{postId}") { AccessToken = accessToken, Method = Enums.Method.DELETE };
+                await req.ExecuteAsync();
             }
             #endregion
             #region CreateReaction
             public async static Task<Models.API.v3.ChannelFeeds.PostReactionResponse> CreateReaction(string channel, string postId, string emoteId, string accessToken = null)
             {
                 Shared.DynamicScopeValidation(Enums.AuthScopes.Channel_Feed_Edit, accessToken);
-                return await Requests.PostGeneric<Models.API.v3.ChannelFeeds.PostReactionResponse>($"https://api.twitch.tv/kraken/feed/{channel}/posts/{postId}/reactions?emote_id={emoteId}", null, accessToken, Requests.API.v3);
+
+                Http req = new Http($"https://api.twitch.tv/kraken/feed/{channel}/posts/{postId}/reactions") { AccessToken = accessToken, Method = Enums.Method.POST };
+                req.AddUrlSegmentRequired("emote_id", emoteId);
+                return await req.ExecuteResponseAsModelAsync<Models.API.v3.ChannelFeeds.PostReactionResponse>();
             }
             #endregion
             #region RemoveReaction
             public async static Task RemoveReaction(string channel, string postId, string emoteId, string accessToken = null)
             {
                 Shared.DynamicScopeValidation(Enums.AuthScopes.Channel_Feed_Edit, accessToken);
-                await Requests.Delete($"https://api.twitch.tv/kraken/feed/{channel}/posts/{postId}/reactions?emote_id={emoteId}", accessToken, Requests.API.v3);
+
+                Http req = new Http($"https://api.twitch.tv/kraken/feed/{channel}/posts/{postId}/reactions") { AccessToken = accessToken, Method = Enums.Method.DELETE };
+                req.AddUrlSegmentRequired("emote_id", emoteId);
+                await req.ExecuteAsync();
             }
             #endregion
         }
